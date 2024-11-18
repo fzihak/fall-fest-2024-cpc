@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fall Fest 2024 - CPC</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header>
+    <h1>Fall Fest 2024 - CPC</h1>
+    <img src="logo.png" alt="Logo" class="logo">
+  </header>
+
+  <main>
+    <section id="editor">
+      <h2>Create Your Framed Photo</h2>
+      <div id="canvasWrapper">
+        <canvas id="photoCanvas"></canvas>
+      </div>
+      <input type="file" id="photoUpload" accept="image/*">
+      <div id="controls">
+        <label>Brightness</label>
+        <input type="range" id="brightnessRange" min="-1" max="1" step="0.1" value="0">
+        <label>Contrast</label>
+        <input type="range" id="contrastRange" min="-1" max="1" step="0.1" value="0">
+        <button id="resetEdits">Reset</button>
+        <button id="previewBtn">Preview</button>
+        <button id="downloadBtn">Download</button>
+      </div>
+    </section>
+
+    <section id="register">
+      <h2>Register for Fall Fest 2024 Now</h2>
+      <iframe 
+        src="https://docs.google.com/forms/d/e/1FAIpQLSeO10fz8PDKnp3b2R0JnY2JXE9_9m1NzXK44faKB8H536ff8Q/viewform" 
+        frameborder="0" 
+        class="form-frame">
+      </iframe>
+    </section>
+
+    <section id="follow-us">
+      <h2>Follow Us</h2>
+      <div class="social-links">
+        <a href="https://www.facebook.com/diucsecpc" target="_blank"><i class="fab fa-facebook fa-2x"></i></a>
+        <a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin fa-2x"></i></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>All Rights Reserved By DIU CPC | Developed by <a href="https://zihak.me" target="_blank">Foysal Zihak</a></p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
