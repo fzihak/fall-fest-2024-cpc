@@ -1,141 +1,121 @@
 /* General Styles */
 body {
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #e0f7fa; /* Sky blue */
+  background-color: #e3f2fd;
+  color: #333;
+}
+
+header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-}
-
-.container {
-  width: 90%;
-  max-width: 600px;
-  margin: 20px auto;
-  text-align: center;
-  background: white;
+  background-color: #007BFF;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  position: relative;
+  color: white;
 }
 
-.logo {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 120px;
-  height: auto;
+header h1 {
+  margin: 0;
 }
 
-h1 {
-  font-size: 1.8rem;
-  color: #007bb5;
+header .logo {
+  height: 50px;
+  width: auto;
 }
 
-.frame-container {
-  position: relative;
-  width: 100%;
-  height: 350px;
-  max-width: 90%;
-  margin: 20px auto;
-  border: 2px dashed #007bb5;
-  background-color: #f9f9f9;
-  overflow: hidden;
+main {
+  padding: 20px;
 }
 
-.frame {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  pointer-events: none;
-}
-
-.photo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  cursor: grab;
-  z-index: 5;
-}
-
-.editor-controls {
+h2 {
+  text-align: center;
   margin-top: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
+  color: #007BFF;
 }
 
-.editor-controls button {
-  background-color: #007bb5;
+/* Canvas Section */
+#canvasWrapper {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+#photoCanvas {
+  border: 1px solid #ddd;
+  max-width: 100%;
+}
+
+#photoUpload {
+  display: block;
+  margin: 10px auto;
+}
+
+#controls {
+  text-align: center;
+}
+
+#controls button {
+  padding: 10px 15px;
+  margin: 10px;
+  background-color: #007BFF;
   color: white;
   border: none;
-  padding: 10px 15px;
-  font-size: 14px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
-  width: 45%;
 }
 
-.editor-controls button:hover {
-  background-color: #005b89;
+#controls button:hover {
+  background-color: #0056b3;
 }
 
-#preview, #download {
-  background-color: #4caf50;
-  margin-top: 15px;
+input[type="range"] {
+  width: 80%;
+  margin: 10px auto;
+  display: block;
 }
 
-#preview:hover, #download:hover {
-  background-color: #388e3c;
+/* Registration Section */
+#register .form-frame {
+  width: 100%;
+  height: 500px;
+  border: none;
 }
 
-/* Social Links Section */
-.social-links {
-  margin-top: 20px;
+/* Follow Us Section */
+#follow-us .social-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
-.social-links a {
+#follow-us .social-links a {
+  color: #007BFF;
   text-decoration: none;
-  margin: 0 10px;
-  color: #007bb5;
-  font-size: 1.5rem;
 }
 
-.social-links a:hover {
-  color: #005b89;
+#follow-us .social-links i {
+  color: #007BFF;
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-  .container {
-      padding: 10px;
-      width: 100%;
-  }
+#follow-us .social-links i:hover {
+  color: #0056b3;
+}
 
-  .frame-container {
-      height: 300px;
-      max-width: 80%;
-  }
+/* Footer */
+footer {
+  text-align: center;
+  background-color: #007BFF;
+  color: white;
+  padding: 10px 0;
+}
 
-  .editor-controls button {
-      flex: 1 1 calc(50% - 10px);
-  }
+footer a {
+  color: #FFDD57;
+  text-decoration: none;
+}
 
-  .logo {
-      top: 10px;
-      right: 10px;
-      width: 100px;
-  }
+footer a:hover {
+  text-decoration: underline;
 }
