@@ -6,7 +6,6 @@ const canvas = new fabric.Canvas('photoCanvas', {
 const frameImage = './frames/frame1.png';
 let frame;
 
-// Load and scale the frame image
 fabric.Image.fromURL(frameImage, (img) => {
   const scaleX = 500 / img.width;
   const scaleY = 400 / img.height;
@@ -74,7 +73,7 @@ document.getElementById('resetEdits').addEventListener('click', () => {
 
 document.getElementById('previewBtn').addEventListener('click', () => {
   const previewWindow = window.open('', '_blank');
-  previewWindow.document.write(<img src="${canvas.toDataURL('image/png')}" alt="Preview" style="width:100%;"/>);
+  previewWindow.document.write(`<img src="${canvas.toDataURL('image/png')}" alt="Preview" style="width:100%;"/>`);
 });
 
 document.getElementById('downloadBtn').addEventListener('click', () => {
