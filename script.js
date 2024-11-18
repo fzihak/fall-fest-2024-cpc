@@ -45,6 +45,7 @@ document.getElementById('photoUpload').addEventListener('change', (e) => {
   }
 });
 
+// Brightness filter
 document.getElementById('brightnessRange').addEventListener('input', (e) => {
   const obj = canvas.getActiveObject();
   if (obj) {
@@ -54,6 +55,7 @@ document.getElementById('brightnessRange').addEventListener('input', (e) => {
   }
 });
 
+// Contrast filter
 document.getElementById('contrastRange').addEventListener('input', (e) => {
   const obj = canvas.getActiveObject();
   if (obj) {
@@ -63,16 +65,7 @@ document.getElementById('contrastRange').addEventListener('input', (e) => {
   }
 });
 
-// Additional Brightness and Contrast Enhancement Function
-function enhancePhoto(obj, brightnessValue, contrastValue) {
-  obj.filters = [
-    new fabric.Image.filters.Brightness({ brightness: brightnessValue }),
-    new fabric.Image.filters.Contrast({ contrast: contrastValue })
-  ];
-  obj.applyFilters();
-}
-
-// Reset edits to default state
+// Reset edits
 document.getElementById('resetEdits').addEventListener('click', () => {
   const obj = canvas.getActiveObject();
   if (obj) {
@@ -82,34 +75,72 @@ document.getElementById('resetEdits').addEventListener('click', () => {
   }
 });
 
+// Preview the enhanced photo
 document.getElementById('previewBtn').addEventListener('click', () => {
   const previewWindow = window.open('', '_blank');
   previewWindow.document.write(`<img src="${canvas.toDataURL('image/png')}" alt="Preview" style="width:100%;"/>`);
 });
 
+// Enhance photo before download
+function enhancePhoto(ctx, width, height) {
+  const imageData = ctx.getImageData(0, 0, width, height);
+  const data = imageData.data;
+
+  // Adjust contrast and saturation (basic enhancement)
+  const contrast = 1.1; // Slightly increase contrast
+  const saturation = 1.2; // Slightly increase saturation
+  const adjustBrightness = 10; // Add slight brightness
+
+  for (let i = 0; i < data.length; i += 4) {
+    // RGB values
+    let r = data[i];
+    let g = data[i + 1];
+    let b = data[i + 2];
+
+    // Apply saturation
+    const gray = 0.3 * r + 0.59 * g + 0.11 * b;
+    r += (r - gray) * (saturation - 1);
+    g += (g - gray) * (saturation - 1);
+    b += (b - gray) * (saturation - 1);
+
+    // Apply contrast
+    r = (r - 128) * contrast + 128;
+    g = (g - 128) * contrast + 128;
+    b = (b - 128) * contrast + 128;
+
+    // Adjust brightness
+    r += adjustBrightness;
+    g += adjustBrightness;
+    b += adjustBrightness;
+
+    // Clamp values to stay within [0, 255]
+    data[i] = Math.min(255, Math.max(0, r));
+    data[i + 1] = Math.min(255, Math.max(0, g));
+    data[i + 2] = Math.min(255, Math.max(0, b));
+  }
+
+  // Update canvas with enhanced data
+  ctx.putImageData(imageData, 0, 0);
+}
+
+// Download the enhanced photo
 document.getElementById('downloadBtn').addEventListener('click', () => {
-  const obj = canvas.getActiveObject();
-  const canvasCopy = new fabric.Canvas('photoCanvas');
-  const enhancedCanvas = canvasCopy.toDataURL('image/png');
+  const canvasElement = document.createElement('canvas');
+  const ctx = canvasElement.getContext('2d');
 
-  // Enhance the downloaded image
-  const newCanvas = document.createElement('canvas');
-  const ctx = newCanvas.getContext('2d');
-  const img = new Image();
-  img.onload = () => {
-    newCanvas.width = frame.width;
-    newCanvas.height = frame.height;
+  // Set the canvas dimensions
+  canvasElement.width = canvas.width;
+  canvasElement.height = canvas.height;
 
-    ctx.drawImage(img, 0, 0, newCanvas.width, newCanvas.height);
+  // Draw the current canvas onto the new canvas
+  ctx.drawImage(canvas.lowerCanvasEl, 0, 0);
 
-    // Apply enhancement
-    enhancePhoto(canvasCopy.getActiveObject(), 1.2, 1.1);
+  // Apply photo enhancement
+  enhancePhoto(ctx, canvas.width, canvas.height);
 
-    // Create a link to download the enhanced photo
-    const link = document.createElement('a');
-    link.download = 'enhanced-framed-photo.png';
-    link.href = newCanvas.toDataURL('image/png');
-    link.click();
-  };
-  img.src = enhancedCanvas;
+  // Create a download link for the enhanced image
+  const link = document.createElement('a');
+  link.download = 'enhanced-framed-photo.png';
+  link.href = canvasElement.toDataURL('image/png');
+  link.click();
 });
