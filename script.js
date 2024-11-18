@@ -17,6 +17,9 @@ fileInput.addEventListener("change", (event) => {
         reader.onload = (e) => {
             photo.src = e.target.result;
             photo.style.display = "block";
+            photo.style.width = "100%";
+            photo.style.height = "100%";
+            photo.style.objectFit = "cover";
         };
         reader.readAsDataURL(file);
     }
