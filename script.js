@@ -14,6 +14,8 @@ fabric.Image.fromURL(frameImage, (img) => {
   });
 
   // Add frame to the canvas (dimensions are adjusted dynamically)
+  canvas.setWidth(img.width * scale);
+  canvas.setHeight(img.height * scale);
   canvas.add(frame);
   frame.moveTo(9999);
 });
