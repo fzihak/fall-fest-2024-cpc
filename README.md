@@ -60,7 +60,7 @@ Contributions are welcome! Here's how you can contribute:
 
 ---
 
-## 🌐 Follow Us
+## 🌐 Follow DIU CPC
 
 - **Facebook**: [DIU CPC Facebook Page](https://www.facebook.com/diucsecpc)
 - **LinkedIn**: [DIU CPC LinkedIn](https://www.linkedin.com/company/diu-cpc-computer-programming-club/)
