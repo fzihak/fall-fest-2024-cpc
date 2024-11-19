@@ -4,23 +4,16 @@ const canvas = new fabric.Canvas('photoCanvas', {
 });
 
 const frameImage = './frames/frame1.png';
-let frame;
+let frame, uploadedPhoto;
 
-// Load and scale the frame image
+// Load and set the frame image
 fabric.Image.fromURL(frameImage, (img) => {
-  const scaleX = 500 / img.width;
-  const scaleY = 400 / img.height;
-  const scale = Math.min(scaleX, scaleY);
-
   frame = img.set({
     selectable: false,
     evented: false,
-    scaleX: scale,
-    scaleY: scale,
   });
 
-  canvas.setWidth(img.width * scale);
-  canvas.setHeight(img.height * scale);
+  // Add frame to the canvas (dimensions are adjusted dynamically)
   canvas.add(frame);
   frame.moveTo(9999);
 });
@@ -31,14 +24,20 @@ document.getElementById('photoUpload').addEventListener('change', (e) => {
     const reader = new FileReader();
     reader.onload = () => {
       fabric.Image.fromURL(reader.result, (img) => {
-        const scaleX = frame.scaleX;
-        const scaleY = frame.scaleY;
-        img.scaleToWidth(frame.width * scaleX);
-        img.scaleToHeight(frame.height * scaleY);
+        uploadedPhoto = img;
 
+        // Resize canvas to match the original photo's dimensions
+        canvas.setWidth(img.width);
+        canvas.setHeight(img.height);
+
+        // Scale frame to match the uploaded image
+        frame.scaleToWidth(img.width);
+        frame.scaleToHeight(img.height);
+
+        // Add the uploaded photo to the canvas
         canvas.add(img);
         canvas.setActiveObject(img);
-        frame.moveTo(9999);
+        frame.moveTo(9999); // Ensure frame is always on top
       });
     };
     reader.readAsDataURL(file);
@@ -47,20 +46,21 @@ document.getElementById('photoUpload').addEventListener('change', (e) => {
 
 // High-quality download function
 document.getElementById('downloadBtn').addEventListener('click', () => {
-  // Create a temporary high-resolution canvas
+  if (!uploadedPhoto) {
+    alert('Please upload a photo first!');
+    return;
+  }
+
+  // Create a temporary canvas to match the original photo's resolution
   const highResCanvas = new fabric.Canvas(null, {
-    width: canvas.width * 2, // Increase resolution by 2x
-    height: canvas.height * 2,
+    width: uploadedPhoto.width,
+    height: uploadedPhoto.height,
     backgroundColor: canvas.backgroundColor,
   });
 
   // Clone all objects from the main canvas
   canvas.getObjects().forEach((obj) => {
     obj.clone((clonedObj) => {
-      clonedObj.scaleX *= 2; // Scale objects for high resolution
-      clonedObj.scaleY *= 2;
-      clonedObj.left *= 2;
-      clonedObj.top *= 2;
       highResCanvas.add(clonedObj);
     });
   });
