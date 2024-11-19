@@ -91,7 +91,7 @@ h2 {
 }
 
 #photoCanvas {
-  border: 0px solid #ddd;
+  border: 1px solid #ddd;
   max-width: 100%;
   border-radius: 8px;
 }
