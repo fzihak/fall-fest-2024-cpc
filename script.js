@@ -4,16 +4,20 @@ const canvas = new fabric.Canvas('photoCanvas', {
 });
 
 const frameImage = './frames/frame1.png';
-let frame, uploadedPhoto;
+let frame;
 
-// Load and set the frame image
 fabric.Image.fromURL(frameImage, (img) => {
+  const scaleX = 500 / img.width;
+  const scaleY = 400 / img.height;
+  const scale = Math.min(scaleX, scaleY);
+
   frame = img.set({
     selectable: false,
     evented: false,
+    scaleX: scale,
+    scaleY: scale,
   });
 
-  // Add frame to the canvas (dimensions are adjusted dynamically)
   canvas.setWidth(img.width * scale);
   canvas.setHeight(img.height * scale);
   canvas.add(frame);
@@ -26,55 +30,43 @@ document.getElementById('photoUpload').addEventListener('change', (e) => {
     const reader = new FileReader();
     reader.onload = () => {
       fabric.Image.fromURL(reader.result, (img) => {
-        uploadedPhoto = img;
+        const scaleX = frame.scaleX;
+        const scaleY = frame.scaleY;
+        img.scaleToWidth(frame.width * scaleX);
+        img.scaleToHeight(frame.height * scaleY);
 
-        // Resize canvas to match the original photo's dimensions
-        canvas.setWidth(img.width);
-        canvas.setHeight(img.height);
-
-        // Scale frame to match the uploaded image
-        frame.scaleToWidth(img.width);
-        frame.scaleToHeight(img.height);
-
-        // Add the uploaded photo to the canvas
         canvas.add(img);
         canvas.setActiveObject(img);
-        frame.moveTo(9999); // Ensure frame is always on top
+        frame.moveTo(9999);
       });
     };
     reader.readAsDataURL(file);
   }
 });
 
-// High-quality download function
+function enhancePhoto(obj) {
+  if (!obj) return;
+
+
+  obj.filters = [
+    new fabric.Image.filters.Brightness({ brightness: 0.1 }), 
+    new fabric.Image.filters.Contrast({ contrast: 0.1 }), 
+    new fabric.Image.filters.Saturation({ saturation: 0.2 }),
+  ];
+
+  obj.applyFilters();
+  canvas.renderAll();
+}
+
 document.getElementById('downloadBtn').addEventListener('click', () => {
-  if (!uploadedPhoto) {
-    alert('Please upload a photo first!');
-    return;
-  }
+  const activeObjects = canvas.getObjects();
 
-  // Create a temporary canvas to match the original photo's resolution
-  const highResCanvas = new fabric.Canvas(null, {
-    width: uploadedPhoto.width,
-    height: uploadedPhoto.height,
-    backgroundColor: canvas.backgroundColor,
+  activeObjects.forEach((obj) => {
+    if (obj.type === 'image') enhancePhoto(obj);
   });
 
-  // Clone all objects from the main canvas
-  canvas.getObjects().forEach((obj) => {
-    obj.clone((clonedObj) => {
-      highResCanvas.add(clonedObj);
-    });
-  });
-
-  // Render high-resolution canvas and download the image
-  setTimeout(() => {
-    const link = document.createElement('a');
-    link.download = 'high-quality-framed-photo.png';
-    link.href = highResCanvas.toDataURL({
-      format: 'png',
-      quality: 1, // Maximum quality
-    });
-    link.click();
-  }, 100);
+  const link = document.createElement('a');
+  link.download = 'cpc-fall-fesr-2024.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
 });
