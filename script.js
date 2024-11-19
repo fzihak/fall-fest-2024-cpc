@@ -44,29 +44,30 @@ document.getElementById('photoUpload').addEventListener('change', (e) => {
   }
 });
 
-function enhancePhoto(obj) {
-  if (!obj) return;
-
-
-  obj.filters = [
-    new fabric.Image.filters.Brightness({ brightness: 0.1 }), 
-    new fabric.Image.filters.Contrast({ contrast: 0.1 }), 
-    new fabric.Image.filters.Saturation({ saturation: 0.2 }),
-  ];
-
-  obj.applyFilters();
-  canvas.renderAll();
-}
-
 document.getElementById('downloadBtn').addEventListener('click', () => {
-  const activeObjects = canvas.getObjects();
-
-  activeObjects.forEach((obj) => {
-    if (obj.type === 'image') enhancePhoto(obj);
+  const highResCanvas = new fabric.Canvas(null, {
+    width: canvas.width * 2, 
+    height: canvas.height * 2,
+    backgroundColor: canvas.backgroundColor,
   });
 
-  const link = document.createElement('a');
-  link.download = 'cpc-fall-fesr-2024.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
+  canvas.getObjects().forEach((obj) => {
+    obj.clone((clonedObj) => {
+      clonedObj.scaleX *= 2; 
+      clonedObj.scaleY *= 2;
+      clonedObj.left *= 2;
+      clonedObj.top *= 2;
+      highResCanvas.add(clonedObj);
+    });
+  });
+
+  setTimeout(() => {
+    const link = document.createElement('a');
+    link.download = 'CPC_fall-fest-2024.png';
+    link.href = highResCanvas.toDataURL({
+      format: 'png',
+      quality: 1, 
+    });
+    link.click();
+  }, 100);
 });
