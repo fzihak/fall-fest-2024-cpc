@@ -6,6 +6,7 @@ const canvas = new fabric.Canvas('photoCanvas', {
 const frameImage = './frames/frame1.png';
 let frame;
 
+// Load and scale the frame image
 fabric.Image.fromURL(frameImage, (img) => {
   const scaleX = 500 / img.width;
   const scaleY = 400 / img.height;
@@ -44,41 +45,34 @@ document.getElementById('photoUpload').addEventListener('change', (e) => {
   }
 });
 
-document.getElementById('brightnessRange').addEventListener('input', (e) => {
-  const obj = canvas.getActiveObject();
-  if (obj) {
-    obj.filters = [new fabric.Image.filters.Brightness({ brightness: parseFloat(e.target.value) })];
-    obj.applyFilters();
-    canvas.renderAll();
-  }
-});
-
-document.getElementById('contrastRange').addEventListener('input', (e) => {
-  const obj = canvas.getActiveObject();
-  if (obj) {
-    obj.filters = [new fabric.Image.filters.Contrast({ contrast: parseFloat(e.target.value) })];
-    obj.applyFilters();
-    canvas.renderAll();
-  }
-});
-
-document.getElementById('resetEdits').addEventListener('click', () => {
-  const obj = canvas.getActiveObject();
-  if (obj) {
-    obj.filters = [];
-    obj.applyFilters();
-    canvas.renderAll();
-  }
-});
-
-document.getElementById('previewBtn').addEventListener('click', () => {
-  const previewWindow = window.open('', '_blank');
-  previewWindow.document.write(`<img src="${canvas.toDataURL('image/png')}" alt="Preview" style="width:100%;"/>`);
-});
-
+// High-quality download function
 document.getElementById('downloadBtn').addEventListener('click', () => {
-  const link = document.createElement('a');
-  link.download = 'framed-photo.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
+  // Create a temporary high-resolution canvas
+  const highResCanvas = new fabric.Canvas(null, {
+    width: canvas.width * 2, // Increase resolution by 2x
+    height: canvas.height * 2,
+    backgroundColor: canvas.backgroundColor,
+  });
+
+  // Clone all objects from the main canvas
+  canvas.getObjects().forEach((obj) => {
+    obj.clone((clonedObj) => {
+      clonedObj.scaleX *= 2; // Scale objects for high resolution
+      clonedObj.scaleY *= 2;
+      clonedObj.left *= 2;
+      clonedObj.top *= 2;
+      highResCanvas.add(clonedObj);
+    });
+  });
+
+  // Render high-resolution canvas and download the image
+  setTimeout(() => {
+    const link = document.createElement('a');
+    link.download = 'high-quality-framed-photo.png';
+    link.href = highResCanvas.toDataURL({
+      format: 'png',
+      quality: 1, // Maximum quality
+    });
+    link.click();
+  }, 100);
 });
